@@ -1,0 +1,20 @@
+actor: ApiTester
+suite_namespace: App\Tests\Api
+modules:
+    enabled:
+        - Symfony:
+              app_path: src
+              environment: test
+        - REST:
+              url: /api
+              depends: Symfony
+              part: Json
+        - Doctrine2:
+              depends: Symfony
+              cleanup: true
+        - DataFactory:
+              depends: Doctrine2
+#        - Filesystem
+        - Asserts
+        - \App\Tests\Helper\Api
+        - \App\Tests\Helper\Factories

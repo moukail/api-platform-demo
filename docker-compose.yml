@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  backend:
+    container_name: paqt-backend
+    build:
+      context: docker
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/var/www/backend
+    environment:
+      - APP_ENV=dev
+      - APP_DEBUG=1
+      - DATABASE_URL=mysql://root:root@paqt-database:3306/paqt
+    depends_on:
+      - database
+    tty: true
+
+  database:
+    image: mysql:8.0
+    container_name: paqt-database
+    ports:
+      - "3306:3306"
+    volumes:
+      - database:/var/lib/mysql
+      #- ./docker/data:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=paqt
+
+volumes:
+  database:
+    driver: local
+  vendor:
+    driver: local
+
+networks:
+  default:
+    name: moukail
