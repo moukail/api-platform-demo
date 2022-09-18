@@ -6,9 +6,6 @@ rm -rf ./*
 echo "-------------------------------------------------------------------"
 echo "-                create symfony project                           -"
 echo "-------------------------------------------------------------------"
-symfony check:requirements
-symfony check:security
-
 export APP_ENV=dev
 symfony new web --version=5.4 #--full
 
