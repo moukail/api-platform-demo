@@ -58,7 +58,6 @@ class RideTest extends \Codeception\Test\Unit
         /** @var Decision $decision */
         $decision = $this->make(Decision::class, ['allowance' => $allowance, 'budget' => 100]);
 
-
         /** @var Taxi $taxi */
         $taxi = $this->make(Taxi::class, ['parcel' => $parcel]);
 
