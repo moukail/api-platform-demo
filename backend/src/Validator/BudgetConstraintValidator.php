@@ -35,9 +35,9 @@ class BudgetConstraintValidator extends ConstraintValidator
         /** @var Decision $decision */
         $decision = $entity->getDecision();
 
-        $totalDistance =  $this->decisionRepository->getTotalDistance($decision);//array_sum($distances);
+        $totalDistance = $this->decisionRepository->getTotalDistance($decision);
 
-        if ($totalDistance < $decision->getBudget()) {
+        if (($totalDistance + $entity->getDistance()) < $decision->getBudget()) {
             return;
         }
 

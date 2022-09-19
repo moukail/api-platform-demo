@@ -45,6 +45,66 @@ class RideCest
         $decision = $I->have(Decision::class);
 
         /** @var Address $destination */
+        //$destination = $I->have(Address::class);
+
+        $houseNumber = $this->faker->buildingNumber();
+        $postalCode = $this->faker->postcode();
+
+        /** @var Taxi $taxi */
+        $taxi = $I->have(Taxi::class, ['parcel' => $decision->getParcel()]);
+
+        $location = $decision->getResident()->getAddress();
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->sendPOST('/rides', [
+            'decision' => ['id' => $decision->getId()],
+            'taxi' => ['id' => $taxi->getId()],
+            'location' => [
+                'id' => $location->getId(),
+            ],
+            'destination' => [
+                'houseNumber' => (int) $houseNumber,
+                'postalCode' => $postalCode,
+            ],
+            'distance' => $distance,
+        ]);
+
+        //$I->seeHttpHeader('content-type', 'application/json');
+        $I->seeResponseCodeIs(HttpCode::CREATED);
+        $I->seeResponseIsJson();
+
+        $I->seeInRepository(Address::class, [
+            'houseNumber' => $houseNumber,
+            'postalCode' => $postalCode,
+        ]);
+
+        $I->seeInRepository(Address::class, [
+            'houseNumber' => $houseNumber,
+            'postalCode' => $postalCode,
+        ]);
+
+        $destination = $I->grabEntityFromRepository(Address::class, [
+            'houseNumber' => $houseNumber,
+            'postalCode' => $postalCode,
+        ]);
+
+        $I->seeInRepository(Ride::class, [
+            'decision' => $decision,
+            'taxi' => $taxi,
+            'location' => $decision->getResident()->getAddress(),
+            'destination' => $destination,
+            'distance' => $distance,
+        ]);
+    }
+
+    public function testCantMakeRideWithLowBudget(ApiTester $I, Scenario $scenario)
+    {
+        $distance = 120;
+
+        /** @var Decision $decision */
+        $decision = $I->have(Decision::class, ['budget' => 10]);
+
+        /** @var Address $destination */
         $destination = $I->have(Address::class);
 
         /** @var Taxi $taxi */
@@ -66,10 +126,51 @@ class RideCest
         ]);
 
         //$I->seeHttpHeader('content-type', 'application/json');
-        $I->seeResponseCodeIs(HttpCode::CREATED);
+        $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
         $I->seeResponseIsJson();
 
-        $I->seeInRepository(Ride::class, [
+        $I->dontSeeInRepository(Ride::class, [
+            'decision' => $decision,
+            'taxi' => $taxi,
+            'location' => $decision->getResident()->getAddress(),
+            'destination' => $destination,
+            'distance' => $distance,
+        ]);
+    }
+
+    public function testCantMakeRideWithDifferentParcel(ApiTester $I, Scenario $scenario)
+    {
+        $distance = 10;
+
+        /** @var Decision $decision */
+        $decision = $I->have(Decision::class);
+
+        /** @var Address $destination */
+        $destination = $I->have(Address::class);
+
+        /** @var Taxi $taxi */
+        $taxi = $I->have(Taxi::class);
+
+        $location = $decision->getResident()->getAddress();
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->sendPOST('/rides', [
+            'decision' => ['id' => $decision->getId()],
+            'taxi' => ['id' => $taxi->getId()],
+            'location' => [
+                'id' => $location->getId(),
+            ],
+            'destination' => [
+                'id' => $destination->getId(),
+            ],
+            'distance' => $distance,
+        ]);
+
+        //$I->seeHttpHeader('content-type', 'application/json');
+        $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
+        $I->seeResponseIsJson();
+
+        $I->dontSeeInRepository(Ride::class, [
             'decision' => $decision,
             'taxi' => $taxi,
             'location' => $decision->getResident()->getAddress(),

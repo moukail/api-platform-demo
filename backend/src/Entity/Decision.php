@@ -56,7 +56,7 @@ class Decision
         return $this->budget;
     }
 
-    private function setBudget(float $budget): self
+    public function setBudget(float $budget): self
     {
         $this->budget = $budget;
 
