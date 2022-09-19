@@ -47,7 +47,6 @@ class ParcelConstraintValidator extends ConstraintValidator
 
         // TODO: implement the validation here
         $this->context->buildViolation($constraint->message)
-            ->atPath('testpath')
             ->addViolation();
     }
 }

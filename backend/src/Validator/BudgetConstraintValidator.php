@@ -43,7 +43,6 @@ class BudgetConstraintValidator extends ConstraintValidator
 
         // TODO: implement the validation here
         $this->context->buildViolation($constraint->message)
-            ->atPath('testpath ' . $totalDistance)
             ->addViolation();
     }
 }
