@@ -2,9 +2,6 @@
 GET http://localhost:8000/api/residents
 
 ###
-GET http://localhost:8000/api/rides
-
-###
 POST http://localhost:8000/api/rides
 Content-Type: application/json; charset=UTF-8
 Accept: application/json
@@ -12,20 +9,23 @@ Cache-Control: no-cache
 
 {
   "decision": {
-    "id":  85
+    "id":  309
   },
   "taxi": {
-    "id":  71
+    "id":  231
   },
   "location": {
-    "id":  205
+    "id":  655
   },
   "destination": {
     "houseNumber":  305,
     "postalCode": "3031XR"
   },
-  "distance": 3.7
+  "distance": 100.1
 }
+
+###
+GET http://localhost:8000/api/rides
 
 ###
 GET http://localhost:8000/api/rides?taxi=71

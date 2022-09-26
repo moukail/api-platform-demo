@@ -35,8 +35,6 @@ echo "-------------------------------------------------------------------"
 echo "-                        website is ready                         -"
 echo "-------------------------------------------------------------------"
 chmod -R a+rw ./
-symfony check:requirements
-symfony security:check
 symfony server:start --daemon
 
 echo "-------------------------------------------------------------------"
